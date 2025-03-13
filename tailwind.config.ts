@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Custom colors for our cyberpunk theme
+				neon: {
+					purple: '#b967ff',
+					blue: '#01cdfe',
+					pink: '#ff71ce',
+					green: '#05ffa1',
+					yellow: '#fffb96'
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +93,44 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-glow': {
+					'0%, 100%': { 
+						opacity: '1',
+						filter: 'brightness(1) blur(0px)'
+					},
+					'50%': { 
+						opacity: '0.8',
+						filter: 'brightness(1.2) blur(2px)'
+					}
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0px)' },
+					'50%': { transform: 'translateY(-10px)' }
+				},
+				'gradient-flow': {
+					'0%': { backgroundPosition: '0% 50%' },
+					'50%': { backgroundPosition: '100% 50%' },
+					'100%': { backgroundPosition: '0% 50%' }
+				},
+				'text-shimmer': {
+					'0%': { backgroundPosition: '0% 50%' },
+					'100%': { backgroundPosition: '100% 50%' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
+				'float': 'float 6s ease-in-out infinite',
+				'gradient-flow': 'gradient-flow 8s ease-in-out infinite',
+				'text-shimmer': 'text-shimmer 3s linear infinite'
+			},
+			backgroundImage: {
+				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+				'cyber-grid': 'linear-gradient(rgba(33, 33, 33, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(33, 33, 33, 0.1) 1px, transparent 1px)',
+				'neon-glow': 'linear-gradient(90deg, rgba(1, 205, 254, 0) 0%, rgba(1, 205, 254, 0.2) 50%, rgba(1, 205, 254, 0) 100%)',
+				'shimmer': 'linear-gradient(to right, #8b5cf6, #3b82f6, #06b6d4, #3b82f6, #8b5cf6)'
 			}
 		}
 	},
