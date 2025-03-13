@@ -57,13 +57,34 @@ export const Dashboard: React.FC = () => {
     }
   ];
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        staggerChildren: 0.1,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 }
+  };
+
   return (
-    <div className="container max-w-7xl mx-auto py-8 px-4">
+    <motion.div 
+      className="container max-w-7xl mx-auto py-8 px-4"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       <div className="text-center mb-12">
         <motion.h1 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.7 }}
           className="text-4xl font-bold mb-2"
         >
           <span className="shimmer-text">AI Marketing Command Center</span>
@@ -71,28 +92,52 @@ export const Dashboard: React.FC = () => {
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
           className="text-muted-foreground max-w-2xl mx-auto"
         >
           Your fully autonomous marketing ecosystem powered by specialized AI agents
         </motion.p>
       </div>
 
-      <div className="mb-8">
+      <motion.div 
+        className="mb-8"
+        variants={itemVariants}
+      >
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="glass-card p-6 rounded-xl relative overflow-hidden mb-8"
+          transition={{ duration: 0.7, delay: 0.5 }}
+          className="glass-card p-6 rounded-xl relative overflow-hidden mb-8 hover-3d"
+          whileHover={{ 
+            boxShadow: "0 20px 40px rgba(0,0,0,0.2)", 
+            translateY: -5 
+          }}
         >
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-card/80 to-transparent"></div>
+            
+            <motion.div 
+              className="absolute -inset-1 bg-gradient-to-r from-neon-blue/10 via-neon-purple/5 to-transparent rounded-inherit"
+              animate={{ 
+                backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
+              }}
+              transition={{ 
+                duration: 15, 
+                ease: "linear", 
+                repeat: Infinity 
+              }}
+            ></motion.div>
           </div>
+          
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-4">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center">
+              <motion.div 
+                className="h-10 w-10 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple flex items-center justify-center"
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
                 <Bot className="h-5 w-5 text-white" />
-              </div>
+              </motion.div>
               <div>
                 <h3 className="text-lg font-medium">Marketing Intelligence Briefing</h3>
                 <p className="text-sm text-muted-foreground">Latest insights from your AI team</p>
@@ -100,36 +145,57 @@ export const Dashboard: React.FC = () => {
             </div>
             
             <div className="flex flex-col gap-4">
-              <div className="p-4 rounded-lg bg-muted/20 border border-white/5">
+              <motion.div 
+                className="p-4 rounded-lg bg-muted/20 border border-white/5 hover:border-white/20 transition-all duration-300"
+                whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.07)" }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
                 <div className="flex items-center gap-2 mb-2">
                   <Sparkles className="h-4 w-4 text-neon-yellow" />
                   <h4 className="font-medium">Current Market Opportunities</h4>
                 </div>
                 <p className="text-sm text-muted-foreground">AI analysis reveals a 23% growth in your target market segment. Consider allocating resources to capitalize on the trend.</p>
-              </div>
+              </motion.div>
               
-              <div className="p-4 rounded-lg bg-muted/20 border border-white/5">
+              <motion.div 
+                className="p-4 rounded-lg bg-muted/20 border border-white/5 hover:border-white/20 transition-all duration-300"
+                whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.07)" }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
                 <div className="flex items-center gap-2 mb-2">
                   <BarChart3 className="h-4 w-4 text-neon-green" />
                   <h4 className="font-medium">Performance Summary</h4>
                 </div>
                 <p className="text-sm text-muted-foreground">Your recent campaigns outperformed industry benchmarks by 15%. Strategy Agent recommends scaling successful channels.</p>
-              </div>
+              </motion.div>
               
-              <div className="p-4 rounded-lg bg-muted/20 border border-white/5">
+              <motion.div 
+                className="p-4 rounded-lg bg-muted/20 border border-white/5 hover:border-white/20 transition-all duration-300"
+                whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.07)" }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
                 <div className="flex items-center gap-2 mb-2">
                   <Zap className="h-4 w-4 text-neon-purple" />
                   <h4 className="font-medium">Next Actions</h4>
                 </div>
                 <p className="text-sm text-muted-foreground">Planning Agent has prepared budget recommendations and campaign roadmap. Review and approve to proceed.</p>
-              </div>
+              </motion.div>
             </div>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
 
-      <h2 className="text-2xl font-semibold mb-6 shimmer-text">AI Agent Ecosystem</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <motion.h2 
+        className="text-2xl font-semibold mb-6 shimmer-text"
+        variants={itemVariants}
+      >
+        AI Agent Ecosystem
+      </motion.h2>
+      
+      <motion.div 
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        variants={containerVariants}
+      >
         {agents.map((agent, index) => (
           <AgentCard
             key={agent.title}
@@ -141,7 +207,7 @@ export const Dashboard: React.FC = () => {
             index={index}
           />
         ))}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };

@@ -1,24 +1,48 @@
 
 import React from 'react';
-import { MenuIcon, User2Icon, BellIcon, Settings } from "lucide-react";
+import { MenuIcon, User2Icon, BellIcon, Settings, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
 
 export const Header: React.FC = () => {
   return (
-    <header className="border-b border-white/10 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
+    <motion.header 
+      className="border-b border-white/10 bg-background/95 backdrop-blur-sm sticky top-0 z-50"
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="flex h-16 items-center justify-between px-6">
         <div className="flex items-center gap-2 sm:gap-4">
           <Button variant="ghost" size="icon" className="lg:hidden">
             <MenuIcon className="h-5 w-5" />
           </Button>
           <div className="flex items-center gap-2">
-            <div className="relative h-8 w-8">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple animate-pulse-glow"></div>
+            <motion.div 
+              className="relative h-8 w-8"
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <motion.div 
+                className="absolute inset-0 rounded-full bg-gradient-to-r from-neon-blue to-neon-purple"
+                animate={{ 
+                  boxShadow: ["0 0 4px rgba(1, 205, 254, 0.5)", "0 0 8px rgba(185, 103, 255, 0.5)", "0 0 4px rgba(1, 205, 254, 0.5)"]
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+              ></motion.div>
               <div className="absolute inset-[2px] rounded-full bg-card flex items-center justify-center">
-                <span className="text-xs font-bold">AI</span>
+                <motion.span 
+                  className="text-xs font-bold"
+                  animate={{ 
+                    color: ["#01cdfe", "#b967ff", "#01cdfe"]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  AI
+                </motion.span>
               </div>
-            </div>
+            </motion.div>
             <h1 className="text-lg font-semibold sm:text-xl">
               <span className="shimmer-text">MarketingAI</span> <span className="text-muted-foreground font-normal">Command</span>
             </h1>
@@ -29,30 +53,35 @@ export const Header: React.FC = () => {
           <div className="relative w-full max-w-md mx-auto">
             <Input 
               placeholder="Ask your AI marketing assistant..." 
-              className="bg-muted/50 border-white/10 pl-4 pr-10 py-2 rounded-full" 
+              className="bg-muted/50 border-white/10 pl-4 pr-10 py-2 rounded-full transition-all duration-300 focus-within:border-neon-blue/50 focus-within:shadow-[0_0_8px_rgba(1,205,254,0.3)]" 
             />
-            <Button size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full bg-primary text-primary-foreground">
+            <Button size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full bg-primary text-primary-foreground hover:bg-neon-purple transition-colors duration-300">
               <span className="sr-only">Search</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m22 22-6-6"></path>
-                <circle cx="10" cy="10" r="8"></circle>
-              </svg>
+              <Sparkles className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
         
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="icon" className="border-white/10 bg-muted/30">
-            <BellIcon className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon" className="border-white/10 bg-muted/30">
-            <Settings className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon" className="border-white/10 bg-muted/30">
-            <User2Icon className="h-4 w-4" />
-          </Button>
+          <motion.div whileHover={{ scale: 1.1 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
+            <Button variant="outline" size="icon" className="border-white/10 bg-muted/30 hover:bg-muted/50 transition-all duration-300">
+              <BellIcon className="h-4 w-4" />
+            </Button>
+          </motion.div>
+          
+          <motion.div whileHover={{ scale: 1.1 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
+            <Button variant="outline" size="icon" className="border-white/10 bg-muted/30 hover:bg-muted/50 transition-all duration-300">
+              <Settings className="h-4 w-4" />
+            </Button>
+          </motion.div>
+          
+          <motion.div whileHover={{ scale: 1.1 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
+            <Button variant="outline" size="icon" className="border-white/10 bg-muted/30 hover:bg-muted/50 transition-all duration-300">
+              <User2Icon className="h-4 w-4" />
+            </Button>
+          </motion.div>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 };
