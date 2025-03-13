@@ -70,7 +70,7 @@
   
   .glass-card::before {
     content: '';
-    @apply absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-inherit opacity-50;
+    @apply absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-50;
     border-radius: inherit;
   }
   
@@ -89,7 +89,7 @@
   
   .neon-border::before {
     content: '';
-    @apply absolute inset-0 rounded-inherit -z-10 p-[1px] bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink animate-gradient-flow;
+    @apply absolute inset-0 -z-10 p-[1px] bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink animate-gradient-flow;
     border-radius: inherit;
     margin: -1px;
   }
@@ -135,7 +135,7 @@
   
   .pulse-border::after {
     content: '';
-    @apply absolute inset-0 rounded-inherit border border-white/20 opacity-0;
+    @apply absolute inset-0 border border-white/20 opacity-0;
     animation: pulse-border 2s ease-out infinite;
     border-radius: inherit;
   }
