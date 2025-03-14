@@ -46,14 +46,29 @@ export const Dashboard: React.FC = () => {
   // Handle agent status change
   const handleAgentStatusChange = async (id: string, newStatus: 'active' | 'processing' | 'idle') => {
     await updateAgentStatus(id, newStatus);
-    toast.success(`Agent status updated to ${newStatus}`);
+  };
+
+  // Handle campaign status change
+  const handleCampaignStatusChange = (campaignId: string, newStatus: 'active' | 'paused') => {
+    // This would normally call an API to update the campaign status
+    // For now we'll just show a toast notification
+    if (newStatus === 'active') {
+      toast.success(`Campaign activated successfully!`);
+    } else {
+      toast.info(`Campaign paused successfully!`);
+    }
   };
 
   // Handle campaign creation
   const handleCreateCampaign = async (campaignData: any) => {
     await createCampaign(campaignData);
     setShowCampaignDialog(false);
-    toast.success('Campaign created successfully!');
+  };
+
+  // Handle triggering an agent
+  const handleTriggerAgent = (agentName: string) => {
+    toast.success(`Agent ${agentName} triggered manually`);
+    setSelectedAgent(null);
   };
 
   if (error) {
@@ -64,7 +79,7 @@ export const Dashboard: React.FC = () => {
             <AlertTriangle className="h-12 w-12 text-premium-orange" />
             <h3 className="text-xl font-semibold">Something went wrong</h3>
             <p className="text-muted-foreground">{error}</p>
-            <Button onClick={() => refreshData()}>Try Again</Button>
+            <Button onClick={refreshData}>Try Again</Button>
           </div>
         </Card>
       </div>
@@ -97,7 +112,7 @@ export const Dashboard: React.FC = () => {
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
               variant="outline" 
-              onClick={() => refreshData()} 
+              onClick={refreshData} 
               disabled={loading}
               className="border-border/30 bg-white/80 hover:bg-primary/5 transition-all duration-300"
             >
@@ -291,13 +306,23 @@ export const Dashboard: React.FC = () => {
                           </Badge>
                           {campaign.status === 'active' ? (
                             <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                              <Button size="icon" variant="outline" className="h-6 w-6 border-border/30 bg-white hover:bg-premium-orange/5" onClick={() => toast.info(`Campaign ${campaign.name} paused`)}>
+                              <Button 
+                                size="icon" 
+                                variant="outline" 
+                                className="h-6 w-6 border-border/30 bg-white hover:bg-premium-orange/5" 
+                                onClick={() => handleCampaignStatusChange(campaign.id, 'paused')}
+                              >
                                 <Pause className="h-3 w-3" />
                               </Button>
                             </motion.div>
                           ) : campaign.status === 'paused' || campaign.status === 'draft' ? (
                             <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                              <Button size="icon" variant="outline" className="h-6 w-6 border-border/30 bg-white hover:bg-premium-teal/5" onClick={() => toast.success(`Campaign ${campaign.name} activated`)}>
+                              <Button 
+                                size="icon" 
+                                variant="outline" 
+                                className="h-6 w-6 border-border/30 bg-white hover:bg-premium-teal/5" 
+                                onClick={() => handleCampaignStatusChange(campaign.id, 'active')}
+                              >
                                 <Play className="h-3 w-3" />
                               </Button>
                             </motion.div>
@@ -334,6 +359,7 @@ export const Dashboard: React.FC = () => {
                       <motion.div 
                         className="mt-3 text-xs text-primary flex items-center gap-1 cursor-pointer w-fit"
                         whileHover={{ x: 3 }}
+                        onClick={() => toast.info(`Viewing details for campaign: ${campaign.name}`)}
                       >
                         <span>View campaign details</span>
                         <Activity className="h-3 w-3" />
@@ -527,10 +553,7 @@ export const Dashboard: React.FC = () => {
                   Close
                 </Button>
                 <Button 
-                  onClick={() => {
-                    toast.success(`Agent ${currentAgent.name} triggered manually`);
-                    setSelectedAgent(null);
-                  }}
+                  onClick={() => handleTriggerAgent(currentAgent.name)}
                   className="bg-gradient-to-r from-premium-blue to-premium-purple"
                 >
                   <Zap className="mr-2 h-4 w-4" />
