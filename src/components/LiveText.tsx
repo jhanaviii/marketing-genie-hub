@@ -8,7 +8,7 @@ interface LiveTextProps {
   className?: string;
 }
 
-export function LiveText({ texts, interval = 3000, className }: LiveTextProps) {
+export function LiveText({ texts, interval = 1500, className }: LiveTextProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   
   useEffect(() => {
@@ -27,7 +27,7 @@ export function LiveText({ texts, interval = 3000, className }: LiveTextProps) {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -20, opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.3 }}
           className={className}
         >
           {texts[currentIndex]}
@@ -37,7 +37,7 @@ export function LiveText({ texts, interval = 3000, className }: LiveTextProps) {
   );
 }
 
-export function TypewriterText({ texts, interval = 5000, className }: LiveTextProps) {
+export function TypewriterText({ texts, interval = 2000, className }: LiveTextProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(true);
   
@@ -66,7 +66,7 @@ export function TypewriterText({ texts, interval = 5000, className }: LiveTextPr
           animate={{ 
             width: isTyping ? "100%" : "100%",
             transition: { 
-              duration: isTyping ? interval / 3000 : 0,
+              duration: isTyping ? interval / 4000 : 0,
               ease: "easeInOut" 
             }
           }}

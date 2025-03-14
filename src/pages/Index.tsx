@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Header } from '@/components/Header';
 import { Dashboard } from '@/components/Dashboard';
@@ -9,7 +8,7 @@ import { LiveCounter, PulsingLiveIndicator } from '@/components/LiveCounter';
 
 const featuresTexts = [
   "Advanced AI Marketing Automation",
-  "Real-time Campaign Analytics",
+  "Real-time Campaign Analytics", 
   "Customer Journey Optimization",
   "Personalized Content Creation",
   "Multi-channel Campaign Management",
@@ -39,7 +38,7 @@ const Index = () => {
             <div className="mt-2 text-muted-foreground">
               <TypewriterText 
                 texts={featuresTexts} 
-                interval={4000}
+                interval={2000}
                 className="text-lg font-medium"
               />
             </div>
