@@ -165,7 +165,7 @@ export const Dashboard: React.FC = () => {
                 className="agent-card group hover:border-primary/30 cursor-pointer"
                 variants={itemVariants}
                 whileHover="hover"
-                variants={cardHoverVariants}
+                animate="show"
                 onClick={() => setSelectedAgent(agent.id)}
               >
                 <div className="flex justify-between items-start">
