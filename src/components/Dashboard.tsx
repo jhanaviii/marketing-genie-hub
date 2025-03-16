@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import { motion } from "framer-motion";
 import { RefreshCw, PlusCircle, AlertTriangle, X, Play, Pause, Zap, TrendingUp, Activity, BarChart3 } from 'lucide-react';
 import { toast } from "sonner";
 import { CreateCampaignForm } from "@/components/CreateCampaignForm";
+import { WorkflowDisplay } from "@/components/WorkflowDisplay";
 
 export const Dashboard: React.FC = () => {
   const { agents, insights, campaigns, loading, error, refreshData, updateAgentStatus, createCampaign } = useMarketing();
@@ -46,6 +46,7 @@ export const Dashboard: React.FC = () => {
   // Handle agent status change
   const handleAgentStatusChange = async (id: string, newStatus: 'active' | 'processing' | 'idle') => {
     await updateAgentStatus(id, newStatus);
+    toast.success(`Agent status updated to ${newStatus}`);
   };
 
   // Handle campaign status change
@@ -63,11 +64,17 @@ export const Dashboard: React.FC = () => {
   const handleCreateCampaign = async (campaignData: any) => {
     await createCampaign(campaignData);
     setShowCampaignDialog(false);
+    toast.success("Campaign created successfully!");
   };
 
   // Handle triggering an agent
   const handleTriggerAgent = (agentName: string) => {
     toast.success(`Agent ${agentName} triggered manually`);
+    setSelectedAgent(null);
+  };
+
+  // Close agent dialog
+  const handleCloseAgentDialog = () => {
     setSelectedAgent(null);
   };
 
@@ -131,6 +138,9 @@ export const Dashboard: React.FC = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Workflow Display Section */}
+      <WorkflowDisplay />
 
       <section className="space-y-4">
         <div className="flex justify-between items-center">
@@ -467,7 +477,12 @@ export const Dashboard: React.FC = () => {
                     <DialogDescription className="text-white/70">{currentAgent.role}</DialogDescription>
                   </div>
                 </div>
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/10" onClick={() => setSelectedAgent(null)}>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-white hover:bg-white/10" 
+                  onClick={handleCloseAgentDialog}
+                >
                   <X className="h-4 w-4" />
                 </Button>
               </div>
@@ -547,7 +562,7 @@ export const Dashboard: React.FC = () => {
               <DialogFooter className="p-4 border-t border-border/10 bg-muted/10">
                 <Button 
                   variant="outline" 
-                  onClick={() => setSelectedAgent(null)}
+                  onClick={handleCloseAgentDialog}
                   className="border-border/30 bg-white"
                 >
                   Close

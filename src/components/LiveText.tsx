@@ -8,7 +8,7 @@ interface LiveTextProps {
   className?: string;
 }
 
-export function LiveText({ texts, interval = 1500, className }: LiveTextProps) {
+export function LiveText({ texts, interval = 1000, className }: LiveTextProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   
   useEffect(() => {
@@ -27,7 +27,7 @@ export function LiveText({ texts, interval = 1500, className }: LiveTextProps) {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -20, opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.2 }}
           className={className}
         >
           {texts[currentIndex]}
@@ -37,14 +37,14 @@ export function LiveText({ texts, interval = 1500, className }: LiveTextProps) {
   );
 }
 
-export function TypewriterText({ texts, interval = 2000, className }: LiveTextProps) {
+export function TypewriterText({ texts, interval = 1200, className }: LiveTextProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTyping, setIsTyping] = useState(true);
   
   useEffect(() => {
     const typingTimer = setInterval(() => {
       setIsTyping((prev) => !prev);
-    }, interval / 2);
+    }, interval / 3);
     
     const textTimer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % texts.length);
@@ -66,7 +66,7 @@ export function TypewriterText({ texts, interval = 2000, className }: LiveTextPr
           animate={{ 
             width: isTyping ? "100%" : "100%",
             transition: { 
-              duration: isTyping ? interval / 4000 : 0,
+              duration: isTyping ? interval / 6000 : 0,
               ease: "easeInOut" 
             }
           }}

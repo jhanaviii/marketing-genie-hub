@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Header } from '@/components/Header';
 import { Dashboard } from '@/components/Dashboard';
@@ -5,6 +6,8 @@ import { ChatPanel } from '@/components/ChatPanel';
 import { motion } from 'framer-motion';
 import { LiveText, TypewriterText } from '@/components/LiveText';
 import { LiveCounter, PulsingLiveIndicator } from '@/components/LiveCounter';
+import { MarketingDashboard } from '@/components/MarketingDashboard';
+import { Card, CardContent } from '@/components/ui/card';
 
 const featuresTexts = [
   "Advanced AI Marketing Automation",
@@ -38,7 +41,7 @@ const Index = () => {
             <div className="mt-2 text-muted-foreground">
               <TypewriterText 
                 texts={featuresTexts} 
-                interval={2000}
+                interval={1200}
                 className="text-lg font-medium"
               />
             </div>
@@ -82,6 +85,11 @@ const Index = () => {
               />
             </div>
           </div>
+        </div>
+
+        {/* Marketing Dashboard Section */}
+        <div className="mb-8">
+          <MarketingDashboard />
         </div>
       </div>
       
