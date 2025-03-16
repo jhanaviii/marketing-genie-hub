@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
 import { X, Zap } from 'lucide-react';
 import { toast } from "sonner";
@@ -159,9 +159,9 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
         )}
       </motion.div>
 
-      {/* Agent Details Dialog - FIXED: Removed duplicate close button */}
+      {/* Agent Details Dialog - Fixed: Completely removed the built-in close button */}
       <Dialog open={!!selectedAgent} onOpenChange={(open) => !open && setSelectedAgent(null)}>
-        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden premium-card">
+        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden premium-card" closeButton={false}>
           {currentAgent && (
             <>
               <div className="flex items-center justify-between p-4 bg-gradient-to-r from-premium-blue to-premium-purple">
