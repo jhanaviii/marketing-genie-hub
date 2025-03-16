@@ -159,7 +159,7 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
         )}
       </motion.div>
 
-      {/* Agent Details Dialog - Fixed to have only one close button */}
+      {/* Agent Details Dialog - FIXED: Removed duplicate close button */}
       <Dialog open={!!selectedAgent} onOpenChange={(open) => !open && setSelectedAgent(null)}>
         <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden premium-card">
           {currentAgent && (
