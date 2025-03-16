@@ -4,10 +4,10 @@ import { Header } from '@/components/Header';
 import { Dashboard } from '@/components/Dashboard';
 import { ChatPanel } from '@/components/ChatPanel';
 import { motion } from 'framer-motion';
-import { LiveText, TypewriterText } from '@/components/LiveText';
-import { LiveCounter, PulsingLiveIndicator } from '@/components/LiveCounter';
+import { TypewriterText } from '@/components/LiveText';
+import { PulsingLiveIndicator } from '@/components/LiveCounter';
 import { MarketingDashboard } from '@/components/MarketingDashboard';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 
 const featuresTexts = [
   "Advanced AI Marketing Automation",
@@ -41,7 +41,7 @@ const Index = () => {
             <div className="mt-2 text-muted-foreground">
               <TypewriterText 
                 texts={featuresTexts} 
-                interval={1200}
+                interval={800}
                 className="text-lg font-medium"
               />
             </div>
@@ -51,38 +51,23 @@ const Index = () => {
             <div className="text-center">
               <PulsingLiveIndicator className="mb-1" />
               <div className="text-xs text-muted-foreground">Active Users</div>
-              <LiveCounter 
-                endValue={432}
-                className="text-xl font-bold shimmer-text-soft"
-                intervalUpdate={true}
-                updateInterval={5000}
-                minChange={5}
-                maxChange={20}
-              />
+              <Card className="bg-gradient-to-r from-premium-blue to-premium-purple text-white px-3 py-1 text-xl font-bold mt-1">
+                432
+              </Card>
             </div>
             
             <div className="text-center">
               <div className="text-xs text-muted-foreground">Campaigns Running</div>
-              <LiveCounter 
-                endValue={28}
-                className="text-xl font-bold shimmer-text-soft"
-                intervalUpdate={true}
-                updateInterval={8000}
-                minChange={1}
-                maxChange={3}
-              />
+              <Card className="bg-gradient-to-r from-premium-indigo to-premium-blue text-white px-3 py-1 text-xl font-bold mt-1">
+                28
+              </Card>
             </div>
             
             <div className="text-center">
               <div className="text-xs text-muted-foreground">Insights Generated</div>
-              <LiveCounter 
-                endValue={1284}
-                className="text-xl font-bold shimmer-text-soft"
-                intervalUpdate={true}
-                updateInterval={3000}
-                minChange={1}
-                maxChange={5}
-              />
+              <Card className="bg-gradient-to-r from-premium-orange to-premium-pink text-white px-3 py-1 text-xl font-bold mt-1">
+                1284
+              </Card>
             </div>
           </div>
         </div>

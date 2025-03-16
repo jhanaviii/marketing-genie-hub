@@ -1,0 +1,149 @@
+
+/* Agent Card Styling */
+.agent-card {
+  position: relative;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(229, 231, 235, 0.5);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  height: 100%;
+  overflow: hidden;
+}
+
+.agent-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.agent-avatar {
+  position: relative;
+  z-index: 10;
+}
+
+.agent-avatar-ring {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  z-index: -1;
+}
+
+/* Premium Card Styling */
+.premium-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(229, 231, 235, 0.5);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+/* Shimmer Text Effect */
+.shimmer-text {
+  background: linear-gradient(
+    to right,
+    #3B82F6 20%,
+    #8B5CF6 30%,
+    #EC4899 70%,
+    #3B82F6 80%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: shimmer 4s linear infinite;
+}
+
+.shimmer-text-soft {
+  background: linear-gradient(
+    to right,
+    #4c94f8 20%,
+    #9e74f8 30%,
+    #f063a8 70%,
+    #4c94f8 80%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: shimmer 6s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Breathing Background Animation */
+.breathing-bg {
+  animation: breathe 8s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+/* Pulse Glow Animations */
+@keyframes pulse-glow-active {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.2);
+  }
+}
+
+@keyframes pulse-glow-processing {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+  }
+}
+
+@keyframes pulse-glow-idle {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.2);
+  }
+}
+
+.animate-pulse-glow-active {
+  animation: pulse-glow-active 2s infinite;
+}
+
+.animate-pulse-glow-processing {
+  animation: pulse-glow-processing 2s infinite;
+}
+
+.animate-pulse-glow-idle {
+  animation: pulse-glow-idle 2s infinite;
+}
+
+/* Custom Theme Colors */
+:root {
+  --premium-blue: #3B82F6;
+  --premium-indigo: #6366F1;
+  --premium-purple: #8B5CF6;
+  --premium-pink: #EC4899;
+  --premium-teal: #14B8A6;
+  --premium-orange: #F97316;
+  --neon-blue: #00BFFF;
+}
