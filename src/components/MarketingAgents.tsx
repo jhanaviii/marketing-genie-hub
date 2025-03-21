@@ -1,10 +1,9 @@
-
-import React, { useState } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useState, useEffect } from 'react';
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
 import { X, Zap } from 'lucide-react';
 import { toast } from "sonner";
@@ -28,15 +27,21 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
 }) => {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
-  const { updateAgentStatus, triggerAgent } = useMarketing();
+  const { updateAgentStatus } = useMarketing();
   const { getAgentTasks } = useAI();
   
   // Find the currently selected agent
   const currentAgent = agents.find(agent => agent.id === selectedAgent);
 
+  useEffect(() => {
+    console.log("MarketingAgents: Selected agent:", selectedAgent);
+    console.log("MarketingAgents: Show prompt dialog:", showPrompt);
+  }, [selectedAgent, showPrompt]);
+
   // Handle agent status change
   const handleAgentStatusChange = async (id: string, newStatus: 'active' | 'processing' | 'idle') => {
     try {
+      console.log("MarketingAgents: Updating agent status:", id, newStatus);
       await updateAgentStatus(id, newStatus);
       toast.success(`Agent status updated to ${newStatus}`);
     } catch (error) {
@@ -48,9 +53,12 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
   // Handle triggering an agent
   const handleTriggerAgent = (agentId: string, agentName: string) => {
     try {
+      console.log("MarketingAgents: Triggering agent:", agentId, agentName);
+      
       // Check if the agent has existing tasks
       getAgentTasks(agentId)
         .then(tasks => {
+          console.log("MarketingAgents: Agent tasks:", tasks);
           if (tasks.length > 0) {
             toast.success(`Agent ${agentName} has ${tasks.length} previous tasks`);
           }
@@ -185,7 +193,13 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
       </motion.div>
 
       {/* Agent Details Dialog */}
-      <Dialog open={!!selectedAgent && !showPrompt} onOpenChange={(open) => !open && setSelectedAgent(null)}>
+      <Dialog 
+        open={!!selectedAgent && !showPrompt} 
+        onOpenChange={(open) => {
+          console.log("Agent details dialog open state changed:", open);
+          if (!open) setSelectedAgent(null);
+        }}
+      >
         <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden premium-card" closeButton={false}>
           {currentAgent && (
             <>
@@ -195,8 +209,8 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
                     <span>{currentAgent.avatar}</span>
                   </div>
                   <div>
-                    <DialogTitle className="text-xl text-white">{currentAgent.name}</DialogTitle>
-                    <DialogDescription className="text-white/70">{currentAgent.role}</DialogDescription>
+                    <h2 className="text-xl text-white">{currentAgent.name}</h2>
+                    <p className="text-white/70">{currentAgent.role}</p>
                   </div>
                 </div>
                 <Button 
@@ -281,7 +295,7 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
                 </div>
               </div>
               
-              <DialogFooter className="p-4 border-t border-border/10 bg-muted/10">
+              <div className="p-4 border-t border-border/10 bg-muted/10 flex justify-between">
                 <Button 
                   variant="outline" 
                   onClick={() => setSelectedAgent(null)}
@@ -292,24 +306,35 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
                 <Button 
                   onClick={() => handleTriggerAgent(currentAgent.id, currentAgent.name)}
                   className="bg-gradient-to-r from-premium-blue to-premium-purple"
+                  type="button"
                 >
                   <Zap className="mr-2 h-4 w-4" />
                   Prompt Agent
                 </Button>
-              </DialogFooter>
+              </div>
             </>
           )}
         </DialogContent>
       </Dialog>
 
       {/* Agent Prompt Dialog */}
-      <Dialog open={!!selectedAgent && showPrompt} onOpenChange={(open) => !open && setShowPrompt(false)}>
+      <Dialog 
+        open={!!selectedAgent && showPrompt} 
+        onOpenChange={(open) => {
+          console.log("Agent prompt dialog open state changed:", open);
+          if (!open) {
+            setShowPrompt(false);
+            setSelectedAgent(null);
+          }
+        }}
+      >
         <DialogContent className="sm:max-w-[700px] p-6 overflow-auto max-h-[90vh] premium-card">
           {currentAgent && (
             <AgentPrompt 
               agentId={currentAgent.id} 
               agentName={currentAgent.name} 
               onClose={() => {
+                console.log("AgentPrompt onClose called");
                 setShowPrompt(false);
                 setSelectedAgent(null);
               }} 

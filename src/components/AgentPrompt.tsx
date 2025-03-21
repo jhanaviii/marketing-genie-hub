@@ -25,9 +25,23 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
 
   console.log("AgentPrompt rendered with agentId:", agentId, "agentName:", agentName);
 
-  // Fetch agent tasks on component mount
+  // Fetch agent tasks on component mount and periodically
   useEffect(() => {
-    const fetchTasks = async () => {
+    console.log("AgentPrompt: Setting up task fetching for agent:", agentId);
+    
+    // Initial fetch
+    fetchTasks();
+    
+    // Poll for task updates every 2 seconds
+    const intervalId = setInterval(fetchTasks, 2000);
+    
+    // Cleanup interval on unmount
+    return () => {
+      console.log("AgentPrompt: Cleaning up interval");
+      clearInterval(intervalId);
+    };
+    
+    async function fetchTasks() {
       try {
         console.log("Fetching tasks for agent:", agentId);
         const agentTasks = await getAgentTasks(agentId);
@@ -36,22 +50,17 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
         
         // If we have a selected task, refresh its data
         if (selectedTask) {
+          console.log("Refreshing selected task:", selectedTask.id);
           const updatedTask = await getTaskById(selectedTask.id);
           if (updatedTask) {
+            console.log("Updated selected task:", updatedTask);
             setSelectedTask(updatedTask);
           }
         }
       } catch (error) {
         console.error('Error fetching tasks:', error);
       }
-    };
-    
-    fetchTasks();
-    
-    // Poll for task updates every 2 seconds
-    const intervalId = setInterval(fetchTasks, 2000);
-    
-    return () => clearInterval(intervalId);
+    }
   }, [agentId, getAgentTasks, getTaskById, selectedTask]);
 
   const handleSubmit = async () => {
@@ -62,9 +71,20 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
     
     try {
       console.log("Submitting prompt to agent:", agentId, "prompt:", prompt);
-      await promptAgent(agentId, prompt);
+      const taskId = await promptAgent(agentId, prompt);
+      console.log("Prompt submitted successfully, taskId:", taskId);
       setPrompt('');
       toast.success(`Prompt submitted to ${agentName}`);
+      
+      // Immediately fetch tasks to show the new task
+      const updatedTasks = await getAgentTasks(agentId);
+      setTasks(updatedTasks);
+      
+      // Find and select the newly created task
+      const newTask = updatedTasks.find(task => task.id === taskId);
+      if (newTask) {
+        setSelectedTask(newTask);
+      }
     } catch (error) {
       console.error('Error submitting prompt:', error);
       toast.error('Failed to submit prompt. Please try again.');
@@ -72,7 +92,10 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
   };
 
   const handleApprove = async () => {
-    if (!selectedTask) return;
+    if (!selectedTask) {
+      console.error("Cannot approve: No task selected");
+      return;
+    }
     
     try {
       console.log("Approving task:", selectedTask.id);
@@ -80,6 +103,10 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
       if (result) {
         toast.success(`${agentName}'s response has been approved`);
         setSelectedTask(null);
+        
+        // Refresh tasks after approval
+        const updatedTasks = await getAgentTasks(agentId);
+        setTasks(updatedTasks);
       } else {
         toast.error('Failed to approve task');
       }
@@ -90,7 +117,10 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
   };
 
   const handleReject = async () => {
-    if (!selectedTask) return;
+    if (!selectedTask) {
+      console.error("Cannot reject: No task selected");
+      return;
+    }
     
     try {
       console.log("Rejecting task:", selectedTask.id, "feedback:", feedback);
@@ -99,6 +129,10 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
         toast.success(`${agentName}'s response has been rejected`);
         setSelectedTask(null);
         setFeedback('');
+        
+        // Refresh tasks after rejection
+        const updatedTasks = await getAgentTasks(agentId);
+        setTasks(updatedTasks);
       } else {
         toast.error('Failed to reject task');
       }
@@ -145,7 +179,12 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
           <Button variant="outline" onClick={onClose} disabled={loading}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={loading || !prompt.trim()} className="bg-gradient-to-r from-premium-blue to-premium-purple">
+          <Button 
+            onClick={handleSubmit} 
+            disabled={loading || !prompt.trim()} 
+            className="bg-gradient-to-r from-premium-blue to-premium-purple"
+            type="button"
+          >
             <Send className="mr-2 h-4 w-4" />
             Submit
           </Button>
@@ -238,11 +277,20 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
               </div>
             </CardContent>
             <CardFooter className="flex justify-end gap-2">
-              <Button variant="outline" onClick={handleReject} className="border-red-200 hover:bg-red-50 text-red-600">
+              <Button 
+                variant="outline" 
+                onClick={handleReject} 
+                className="border-red-200 hover:bg-red-50 text-red-600"
+                type="button"
+              >
                 <XCircle className="mr-2 h-4 w-4" />
                 Reject
               </Button>
-              <Button onClick={handleApprove} className="bg-green-600 hover:bg-green-700">
+              <Button 
+                onClick={handleApprove} 
+                className="bg-green-600 hover:bg-green-700"
+                type="button"
+              >
                 <CheckCircle className="mr-2 h-4 w-4" />
                 Approve
               </Button>
