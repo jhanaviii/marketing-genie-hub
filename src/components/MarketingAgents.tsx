@@ -10,6 +10,7 @@ import { X, Zap } from 'lucide-react';
 import { toast } from "sonner";
 import { Agent } from '@/services/api';
 import { useMarketing } from '@/context/MarketingContext';
+import { AgentPrompt } from '@/components/AgentPrompt';
 
 interface MarketingAgentsProps {
   agents: Agent[];
@@ -25,6 +26,7 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
   itemVariants
 }) => {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+  const [showPrompt, setShowPrompt] = useState(false);
   const { updateAgentStatus } = useMarketing();
   
   // Find the currently selected agent
@@ -37,9 +39,9 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
   };
 
   // Handle triggering an agent
-  const handleTriggerAgent = (agentName: string) => {
-    toast.success(`Agent ${agentName} triggered manually`);
-    setSelectedAgent(null);
+  const handleTriggerAgent = (agentId: string, agentName: string) => {
+    setShowPrompt(true);
+    toast.success(`Agent ${agentName} ready for instructions`);
   };
 
   return (
@@ -159,8 +161,8 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
         )}
       </motion.div>
 
-      {/* Agent Details Dialog - Fixed: Completely removed the built-in close button */}
-      <Dialog open={!!selectedAgent} onOpenChange={(open) => !open && setSelectedAgent(null)}>
+      {/* Agent Details Dialog */}
+      <Dialog open={!!selectedAgent && !showPrompt} onOpenChange={(open) => !open && setSelectedAgent(null)}>
         <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden premium-card" closeButton={false}>
           {currentAgent && (
             <>
@@ -265,14 +267,30 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
                   Close
                 </Button>
                 <Button 
-                  onClick={() => handleTriggerAgent(currentAgent.name)}
+                  onClick={() => handleTriggerAgent(currentAgent.id, currentAgent.name)}
                   className="bg-gradient-to-r from-premium-blue to-premium-purple"
                 >
                   <Zap className="mr-2 h-4 w-4" />
-                  Trigger Agent
+                  Prompt Agent
                 </Button>
               </DialogFooter>
             </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Agent Prompt Dialog */}
+      <Dialog open={!!selectedAgent && showPrompt} onOpenChange={(open) => !open && setShowPrompt(false)}>
+        <DialogContent className="sm:max-w-[700px] p-6 overflow-auto max-h-[90vh] premium-card">
+          {currentAgent && (
+            <AgentPrompt 
+              agentId={currentAgent.id} 
+              agentName={currentAgent.name} 
+              onClose={() => {
+                setShowPrompt(false);
+                setSelectedAgent(null);
+              }} 
+            />
           )}
         </DialogContent>
       </Dialog>
