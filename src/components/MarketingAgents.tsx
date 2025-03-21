@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
 import { X, Zap } from 'lucide-react';
 import { toast } from "sonner";
@@ -52,27 +52,21 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
 
   // Handle triggering an agent
   const handleTriggerAgent = (agentId: string, agentName: string) => {
-    try {
-      console.log("MarketingAgents: Triggering agent:", agentId, agentName);
-      
-      // Check if the agent has existing tasks
-      getAgentTasks(agentId)
-        .then(tasks => {
-          console.log("MarketingAgents: Agent tasks:", tasks);
-          if (tasks.length > 0) {
-            toast.success(`Agent ${agentName} has ${tasks.length} previous tasks`);
-          }
-        })
-        .catch(error => {
-          console.error('Error checking agent tasks:', error);
-        });
-      
-      setShowPrompt(true);
-      toast.success(`Agent ${agentName} ready for instructions`);
-    } catch (error) {
-      console.error('Error triggering agent:', error);
-      toast.error('Failed to trigger agent');
-    }
+    console.log("MarketingAgents: Triggering agent:", agentId, agentName);
+    setSelectedAgent(agentId);
+    setShowPrompt(true);
+    
+    // Check if the agent has existing tasks
+    getAgentTasks(agentId)
+      .then(tasks => {
+        console.log("MarketingAgents: Agent tasks:", tasks);
+        if (tasks.length > 0) {
+          toast.success(`${agentName} has ${tasks.length} previous tasks`);
+        }
+      })
+      .catch(error => {
+        console.error('Error checking agent tasks:', error);
+      });
   };
 
   return (
@@ -200,7 +194,8 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
           if (!open) setSelectedAgent(null);
         }}
       >
-        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden premium-card" closeButton={false}>
+        <DialogContent className="sm:max-w-[500px] p-0 overflow-hidden premium-card">
+          <DialogTitle className="sr-only">Agent Details</DialogTitle>
           {currentAgent && (
             <>
               <div className="flex items-center justify-between p-4 bg-gradient-to-r from-premium-blue to-premium-purple">
@@ -329,6 +324,7 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
         }}
       >
         <DialogContent className="sm:max-w-[700px] p-6 overflow-auto max-h-[90vh] premium-card">
+          <DialogTitle className="sr-only">Agent Prompt</DialogTitle>
           {currentAgent && (
             <AgentPrompt 
               agentId={currentAgent.id} 

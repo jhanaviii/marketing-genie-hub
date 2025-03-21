@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { aiService, AIPrompt, AIResponse, AgentTask } from '@/services/aiService';
 import { toast } from 'sonner';
 
@@ -19,6 +19,12 @@ const AIContext = createContext<AIContextType | undefined>(undefined);
 export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [currentTask, setCurrentTask] = useState<AgentTask | undefined>();
+
+  // Log provider mounting
+  useEffect(() => {
+    console.log("AIProvider mounted");
+    return () => console.log("AIProvider unmounted");
+  }, []);
 
   const promptAgent = useCallback(async (agentId: string, prompt: string) => {
     try {

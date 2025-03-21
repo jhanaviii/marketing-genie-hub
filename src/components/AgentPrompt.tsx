@@ -21,7 +21,14 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
   const [tasks, setTasks] = useState<AgentTask[]>([]);
   const [selectedTask, setSelectedTask] = useState<AgentTask | null>(null);
   const [feedback, setFeedback] = useState('');
-  const { promptAgent, getAgentTasks, getTaskById, approveTaskResult, rejectTaskResult, loading } = useAI();
+  const { 
+    promptAgent, 
+    getAgentTasks, 
+    getTaskById, 
+    approveTaskResult, 
+    rejectTaskResult, 
+    loading 
+  } = useAI();
 
   console.log("AgentPrompt rendered with agentId:", agentId, "agentName:", agentName);
 
