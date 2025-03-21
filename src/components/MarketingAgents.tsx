@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { Agent } from '@/services/api';
 import { useMarketing } from '@/context/MarketingContext';
 import { AgentPrompt } from '@/components/AgentPrompt';
+import { useAI } from '@/context/AIContext';
 
 interface MarketingAgentsProps {
   agents: Agent[];
@@ -27,21 +28,43 @@ export const MarketingAgents: React.FC<MarketingAgentsProps> = ({
 }) => {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
-  const { updateAgentStatus } = useMarketing();
+  const { updateAgentStatus, triggerAgent } = useMarketing();
+  const { getAgentTasks } = useAI();
   
   // Find the currently selected agent
   const currentAgent = agents.find(agent => agent.id === selectedAgent);
 
   // Handle agent status change
   const handleAgentStatusChange = async (id: string, newStatus: 'active' | 'processing' | 'idle') => {
-    await updateAgentStatus(id, newStatus);
-    toast.success(`Agent status updated to ${newStatus}`);
+    try {
+      await updateAgentStatus(id, newStatus);
+      toast.success(`Agent status updated to ${newStatus}`);
+    } catch (error) {
+      console.error('Error updating agent status:', error);
+      toast.error('Failed to update agent status');
+    }
   };
 
   // Handle triggering an agent
   const handleTriggerAgent = (agentId: string, agentName: string) => {
-    setShowPrompt(true);
-    toast.success(`Agent ${agentName} ready for instructions`);
+    try {
+      // Check if the agent has existing tasks
+      getAgentTasks(agentId)
+        .then(tasks => {
+          if (tasks.length > 0) {
+            toast.success(`Agent ${agentName} has ${tasks.length} previous tasks`);
+          }
+        })
+        .catch(error => {
+          console.error('Error checking agent tasks:', error);
+        });
+      
+      setShowPrompt(true);
+      toast.success(`Agent ${agentName} ready for instructions`);
+    } catch (error) {
+      console.error('Error triggering agent:', error);
+      toast.error('Failed to trigger agent');
+    }
   };
 
   return (

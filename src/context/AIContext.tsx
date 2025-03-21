@@ -24,7 +24,6 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     try {
       setLoading(true);
       const taskId = await aiService.submitAgentPrompt(agentId, prompt);
-      toast.success('Task submitted successfully');
       return taskId;
     } catch (error) {
       toast.error(`Failed to submit task: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -39,6 +38,7 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
       setLoading(true);
       return await aiService.getAgentTasks(agentId);
     } catch (error) {
+      console.error('Failed to get agent tasks:', error);
       toast.error(`Failed to get agent tasks: ${error instanceof Error ? error.message : 'Unknown error'}`);
       return [];
     } finally {
@@ -52,6 +52,7 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
       const task = await aiService.getTask(taskId);
       return task;
     } catch (error) {
+      console.error('Failed to get task:', error);
       toast.error(`Failed to get task: ${error instanceof Error ? error.message : 'Unknown error'}`);
       return undefined;
     } finally {
@@ -64,6 +65,7 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
       setLoading(true);
       return await aiService.approveTaskResult(taskId);
     } catch (error) {
+      console.error('Failed to approve task:', error);
       toast.error(`Failed to approve task: ${error instanceof Error ? error.message : 'Unknown error'}`);
       return false;
     } finally {
@@ -76,6 +78,7 @@ export const AIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
       setLoading(true);
       return await aiService.rejectTaskResult(taskId, feedback);
     } catch (error) {
+      console.error('Failed to reject task:', error);
       toast.error(`Failed to reject task: ${error instanceof Error ? error.message : 'Unknown error'}`);
       return false;
     } finally {

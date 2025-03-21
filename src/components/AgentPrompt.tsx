@@ -20,13 +20,26 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
   const [prompt, setPrompt] = useState('');
   const [tasks, setTasks] = useState<AgentTask[]>([]);
   const [selectedTask, setSelectedTask] = useState<AgentTask | null>(null);
-  const { promptAgent, getAgentTasks, approveTaskResult, rejectTaskResult, loading } = useAI();
+  const [feedback, setFeedback] = useState('');
+  const { promptAgent, getAgentTasks, getTaskById, approveTaskResult, rejectTaskResult, loading } = useAI();
 
   // Fetch agent tasks on component mount
   useEffect(() => {
     const fetchTasks = async () => {
-      const agentTasks = await getAgentTasks(agentId);
-      setTasks(agentTasks);
+      try {
+        const agentTasks = await getAgentTasks(agentId);
+        setTasks(agentTasks);
+        
+        // If we have a selected task, refresh its data
+        if (selectedTask) {
+          const updatedTask = await getTaskById(selectedTask.id);
+          if (updatedTask) {
+            setSelectedTask(updatedTask);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
     };
     
     fetchTasks();
@@ -35,7 +48,7 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
     const intervalId = setInterval(fetchTasks, 2000);
     
     return () => clearInterval(intervalId);
-  }, [agentId, getAgentTasks]);
+  }, [agentId, getAgentTasks, getTaskById, selectedTask]);
 
   const handleSubmit = async () => {
     if (!prompt.trim()) {
@@ -46,28 +59,45 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
     try {
       await promptAgent(agentId, prompt);
       setPrompt('');
+      toast.success(`Prompt submitted to ${agentName}`);
     } catch (error) {
       console.error('Error submitting prompt:', error);
+      toast.error('Failed to submit prompt. Please try again.');
     }
   };
 
   const handleApprove = async () => {
     if (!selectedTask) return;
     
-    const result = await approveTaskResult(selectedTask.id);
-    if (result) {
-      toast.success(`${agentName}'s response has been approved`);
-      setSelectedTask(null);
+    try {
+      const result = await approveTaskResult(selectedTask.id);
+      if (result) {
+        toast.success(`${agentName}'s response has been approved`);
+        setSelectedTask(null);
+      } else {
+        toast.error('Failed to approve task');
+      }
+    } catch (error) {
+      console.error('Error approving task:', error);
+      toast.error('An error occurred while approving the task');
     }
   };
 
   const handleReject = async () => {
     if (!selectedTask) return;
     
-    const result = await rejectTaskResult(selectedTask.id);
-    if (result) {
-      toast.success(`${agentName}'s response has been rejected`);
-      setSelectedTask(null);
+    try {
+      const result = await rejectTaskResult(selectedTask.id, feedback);
+      if (result) {
+        toast.success(`${agentName}'s response has been rejected`);
+        setSelectedTask(null);
+        setFeedback('');
+      } else {
+        toast.error('Failed to reject task');
+      }
+    } catch (error) {
+      console.error('Error rejecting task:', error);
+      toast.error('An error occurred while rejecting the task');
     }
   };
 
@@ -97,7 +127,7 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
         </CardHeader>
         <CardContent>
           <Textarea
-            placeholder={`What would you like the ${agentName} to do?`}
+            placeholder={`What would you like the ${agentName} to do? Be specific about your marketing goals.`}
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             className="min-h-[120px] border-gray-200"
@@ -121,7 +151,7 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
             <CardTitle>Task History</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-[200px] overflow-y-auto">
               {tasks.map((task) => (
                 <motion.div
                   key={task.id}
@@ -189,6 +219,16 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
                   <span>{selectedTask.result.error}</span>
                 </div>
               )}
+              
+              {/* Feedback field for rejection */}
+              <div className="mt-4">
+                <Textarea
+                  placeholder="Provide feedback (optional)"
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  className="w-full mt-2"
+                />
+              </div>
             </CardContent>
             <CardFooter className="flex justify-end gap-2">
               <Button variant="outline" onClick={handleReject} className="border-red-200 hover:bg-red-50 text-red-600">
