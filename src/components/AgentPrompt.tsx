@@ -23,11 +23,15 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
   const [feedback, setFeedback] = useState('');
   const { promptAgent, getAgentTasks, getTaskById, approveTaskResult, rejectTaskResult, loading } = useAI();
 
+  console.log("AgentPrompt rendered with agentId:", agentId, "agentName:", agentName);
+
   // Fetch agent tasks on component mount
   useEffect(() => {
     const fetchTasks = async () => {
       try {
+        console.log("Fetching tasks for agent:", agentId);
         const agentTasks = await getAgentTasks(agentId);
+        console.log("Fetched tasks:", agentTasks);
         setTasks(agentTasks);
         
         // If we have a selected task, refresh its data
@@ -57,6 +61,7 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
     }
     
     try {
+      console.log("Submitting prompt to agent:", agentId, "prompt:", prompt);
       await promptAgent(agentId, prompt);
       setPrompt('');
       toast.success(`Prompt submitted to ${agentName}`);
@@ -70,6 +75,7 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
     if (!selectedTask) return;
     
     try {
+      console.log("Approving task:", selectedTask.id);
       const result = await approveTaskResult(selectedTask.id);
       if (result) {
         toast.success(`${agentName}'s response has been approved`);
@@ -87,6 +93,7 @@ export const AgentPrompt: React.FC<AgentPromptProps> = ({ agentId, agentName, on
     if (!selectedTask) return;
     
     try {
+      console.log("Rejecting task:", selectedTask.id, "feedback:", feedback);
       const result = await rejectTaskResult(selectedTask.id, feedback);
       if (result) {
         toast.success(`${agentName}'s response has been rejected`);
